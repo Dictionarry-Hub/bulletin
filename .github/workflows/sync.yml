@@ -1,0 +1,88 @@
+name: Sync versions manifest
+
+on:
+  schedule:
+    - cron: "0 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch stable release history
+        id: stable
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          # Paginate through all releases; filter drafts and prereleases.
+          gh api --paginate repos/Dictionarry-Hub/profilarr/releases \
+            | jq -s '
+                add
+                | map(select(.draft == false and .prerelease == false))
+                | map({
+                    tag: (.tag_name | ltrimstr("v")),
+                    published_at: .published_at,
+                    url: .html_url
+                  })
+                | sort_by(.published_at) | reverse
+              ' > stable-releases.json
+
+          latest=$(jq -r '.[0].tag // empty' stable-releases.json)
+          if [ -z "$latest" ]; then
+            echo "No non-draft non-prerelease releases found. Aborting."
+            exit 1
+          fi
+          echo "latest=$latest" >> "$GITHUB_OUTPUT"
+
+      - name: Fetch develop HEAD
+        id: develop
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          commit=$(gh api repos/Dictionarry-Hub/profilarr/commits/develop)
+          {
+            echo "sha=$(echo "$commit" | jq -r '.sha[0:7]')"
+            echo "published_at=$(echo "$commit" | jq -r '.commit.committer.date')"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Build next versions.json (without touching updated_at)
+        run: |
+          set -e
+          jq \
+            --arg stable_latest "${{ steps.stable.outputs.latest }}" \
+            --arg develop_sha "${{ steps.develop.outputs.sha }}" \
+            --arg develop_published_at "${{ steps.develop.outputs.published_at }}" \
+            --slurpfile releases stable-releases.json \
+            '
+              .channels.stable.latest = $stable_latest
+              | .channels.stable.releases = $releases[0]
+              | .channels.develop.latest = $develop_sha
+              | .channels.develop.published_at = $develop_published_at
+            ' versions.json > versions.json.new
+
+      - name: Commit if content changed
+        run: |
+          set -e
+
+          if diff -q versions.json versions.json.new > /dev/null; then
+            echo "No content changes"
+            rm versions.json.new stable-releases.json
+            exit 0
+          fi
+
+          now=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          jq --arg now "$now" '.updated_at = $now' versions.json.new > versions.json
+          rm versions.json.new stable-releases.json
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add versions.json
+          git commit -m "chore: sync versions manifest"
+          git push

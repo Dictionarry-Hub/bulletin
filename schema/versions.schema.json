@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/Dictionarry-Hub/bulletin/main/schema/versions.schema.json",
+  "title": "Profilarr Bulletin versions.json",
+  "type": "object",
+  "required": ["schema", "updated_at", "channels"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "const": 1,
+      "description": "Schema version. Bump when making breaking changes."
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "channels": {
+      "type": "object",
+      "required": ["stable", "develop"],
+      "additionalProperties": false,
+      "properties": {
+        "stable": {
+          "type": "object",
+          "required": ["latest", "releases"],
+          "additionalProperties": false,
+          "properties": {
+            "latest": {
+              "type": "string",
+              "pattern": "^\\d+\\.\\d+\\.\\d+$",
+              "description": "Latest stable SemVer, no 'v' prefix."
+            },
+            "releases": {
+              "type": "array",
+              "description": "Stable release history, newest first. Rebuilt on every sync from the GitHub Releases API.",
+              "items": {
+                "type": "object",
+                "required": ["tag", "published_at", "url"],
+                "additionalProperties": false,
+                "properties": {
+                  "tag": {
+                    "type": "string",
+                    "pattern": "^\\d+\\.\\d+\\.\\d+$"
+                  },
+                  "published_at": { "type": "string", "format": "date-time" },
+                  "url": { "type": "string", "format": "uri" }
+                }
+              }
+            }
+          }
+        },
+        "develop": {
+          "type": "object",
+          "required": ["latest", "published_at"],
+          "additionalProperties": false,
+          "properties": {
+            "latest": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{7,40}$",
+              "description": "Short or full commit SHA of develop HEAD."
+            },
+            "published_at": { "type": "string", "format": "date-time" }
+          }
+        }
+      }
+    }
+  }
+}

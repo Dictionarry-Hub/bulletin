@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/Dictionarry-Hub/bulletin/main/schema/announcements.schema.json",
+  "title": "Profilarr Bulletin announcements.json",
+  "type": "object",
+  "required": ["schema", "updated_at", "announcements"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": 1 },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "announcements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "severity", "published_at"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "ULID. 26 chars, Crockford Base32."
+          },
+          "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+          "severity": { "enum": ["info", "warning", "critical"] },
+          "published_at": { "type": "string", "format": "date-time" },
+          "expires_at": {
+            "type": ["string", "null"],
+            "format": "date-time"
+          },
+          "min_version": {
+            "type": ["string", "null"],
+            "pattern": "^\\d+\\.\\d+\\.\\d+$"
+          },
+          "max_version": {
+            "type": ["string", "null"],
+            "pattern": "^\\d+\\.\\d+\\.\\d+$"
+          },
+          "link": {
+            "type": ["string", "null"],
+            "format": "uri"
+          }
+        }
+      }
+    }
+  }
+}

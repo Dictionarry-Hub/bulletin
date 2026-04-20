@@ -1,0 +1,77 @@
+name: Validate
+
+on:
+  pull_request:
+    paths:
+      - "versions.json"
+      - "announcements.json"
+      - "schema/**"
+      - "announcements/**"
+  push:
+    branches: [main]
+    paths:
+      - "versions.json"
+      - "announcements.json"
+      - "schema/**"
+      - "announcements/**"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install check-jsonschema
+        run: pipx install check-jsonschema
+
+      - name: Validate versions.json against schema
+        run: check-jsonschema --schemafile schema/versions.schema.json versions.json
+
+      - name: Validate announcements.json against schema
+        run: check-jsonschema --schemafile schema/announcements.schema.json announcements.json
+
+      - name: Check announcement id uniqueness
+        run: |
+          set -e
+          dupes=$(jq -r '.announcements[].id' announcements.json | sort | uniq -d)
+          if [ -n "$dupes" ]; then
+            echo "Duplicate announcement ids found:"
+            echo "$dupes"
+            exit 1
+          fi
+
+      - name: Check stable release tag uniqueness
+        run: |
+          set -e
+          dupes=$(jq -r '.channels.stable.releases[].tag' versions.json | sort | uniq -d)
+          if [ -n "$dupes" ]; then
+            echo "Duplicate release tags found:"
+            echo "$dupes"
+            exit 1
+          fi
+
+      - name: Every announcement must have a body file
+        run: |
+          set -e
+          missing=0
+          for id in $(jq -r '.announcements[].id' announcements.json); do
+            if [ ! -f "announcements/$id.md" ]; then
+              echo "Missing body: announcements/$id.md"
+              missing=1
+            fi
+          done
+          [ "$missing" -eq 0 ]
+
+      - name: Every body file must have an announcement entry
+        run: |
+          set -e
+          orphans=0
+          shopt -s nullglob
+          for f in announcements/*.md; do
+            id=$(basename "$f" .md)
+            if ! jq -e --arg id "$id" '.announcements[] | select(.id == $id)' announcements.json > /dev/null; then
+              echo "Orphan body file: $f"
+              orphans=1
+            fi
+          done
+          [ "$orphans" -eq 0 ]

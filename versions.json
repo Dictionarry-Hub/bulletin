@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "updated_at": "2026-04-20T22:11:00Z",
+  "channels": {
+    "stable": {
+      "latest": "1.1.4",
+      "releases": [
+        {
+          "tag": "1.1.4",
+          "published_at": "2026-01-29T14:57:25Z",
+          "url": "https://github.com/Dictionarry-Hub/profilarr/releases/tag/v1.1.4"
+        }
+      ]
+    },
+    "develop": {
+      "latest": "74ba9a6",
+      "published_at": "2026-04-20T08:22:28Z"
+    }
+  }
+}
