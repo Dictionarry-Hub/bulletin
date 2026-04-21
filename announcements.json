@@ -1,5 +1,16 @@
 {
   "schema": 1,
-  "updated_at": "2026-04-20T22:11:00Z",
-  "announcements": []
+  "updated_at": "2026-04-21T08:00:00Z",
+  "announcements": [
+    {
+      "id": "01KPQ2HWEKXS9G7QMKF9X5NQ8N",
+      "title": "✨ New: In App Announcements",
+      "severity": "info",
+      "published_at": "2026-04-21T08:00:00Z",
+      "expires_at": "2026-04-28T08:00:00Z",
+      "min_version": null,
+      "max_version": null,
+      "link": null
+    }
+  ]
 }
