@@ -26,8 +26,8 @@
           "properties": {
             "latest": {
               "type": "string",
-              "pattern": "^\\d+\\.\\d+\\.\\d+$",
-              "description": "Latest stable SemVer, no 'v' prefix."
+              "pattern": "^\\d+(\\.\\d+){0,3}$",
+              "description": "Latest stable release tag, no 'v' prefix. Accepts 1-4 numeric components to handle legacy tags like `0.3.2.4`."
             },
             "releases": {
               "type": "array",
@@ -39,7 +39,7 @@
                 "properties": {
                   "tag": {
                     "type": "string",
-                    "pattern": "^\\d+\\.\\d+\\.\\d+$"
+                    "pattern": "^\\d+(\\.\\d+){0,3}$"
                   },
                   "published_at": { "type": "string", "format": "date-time" },
                   "url": { "type": "string", "format": "uri" }
