@@ -1,7 +1,17 @@
 {
   "schema": 1,
-  "updated_at": "2026-04-21T08:00:00Z",
+  "updated_at": "2026-05-04T00:00:00Z",
   "announcements": [
+    {
+      "id": "01KQS6095SKG0360WTRSJ73Q70",
+      "title": "✨ New: Drift Detection",
+      "severity": "info",
+      "published_at": "2026-05-04T00:00:00Z",
+      "expires_at": "2026-05-11T00:00:00Z",
+      "min_version": null,
+      "max_version": null,
+      "link": null
+    },
     {
       "id": "01KPQ2HWEKXS9G7QMKF9X5NQ8N",
       "title": "✨ New: In App Announcements",
