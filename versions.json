@@ -1,10 +1,15 @@
 {
   "schema": 1,
-  "updated_at": "2026-05-19T11:01:16Z",
+  "updated_at": "2026-05-19T12:57:17Z",
   "channels": {
     "stable": {
-      "latest": "2.0.0",
+      "latest": "2.0.1",
       "releases": [
+        {
+          "tag": "2.0.1",
+          "published_at": "2026-05-19T11:02:47Z",
+          "url": "https://github.com/Dictionarry-Hub/profilarr/releases/tag/v2.0.1"
+        },
         {
           "tag": "2.0.0",
           "published_at": "2026-05-17T20:02:17Z",
@@ -108,8 +113,8 @@
       ]
     },
     "develop": {
-      "latest": "62303c2",
-      "published_at": "2026-05-19T10:40:58Z"
+      "latest": "0f6d226",
+      "published_at": "2026-05-19T12:09:02Z"
     }
   }
 }
