@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-08T17:19:49Z",
+  "updated_at": "2026-08-08T18:20:27Z",
   "channels": {
     "stable": {
       "latest": "2.0.9",
@@ -158,8 +158,8 @@
       ]
     },
     "develop": {
-      "latest": "db80916",
-      "published_at": "2026-08-08T16:21:32Z"
+      "latest": "dffcfc9",
+      "published_at": "2026-08-08T18:14:33Z"
     }
   }
 }
