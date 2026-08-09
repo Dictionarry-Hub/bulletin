@@ -1,13 +1,13 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-09T08:40:08Z",
+  "updated_at": "2026-08-09T09:29:34Z",
   "announcements": [
     {
       "id": "01KZJTQ79896ETR93PY79TKXTW",
       "title": "🎉 Profilarr v2.1.0 is now available",
       "severity": "info",
-      "published_at": "2026-08-09T08:40:08Z",
-      "expires_at": "2026-10-08T08:40:08Z",
+      "published_at": "2026-08-09T09:29:34Z",
+      "expires_at": "2026-10-08T09:29:34Z",
       "min_version": null,
       "max_version": null,
       "link": "https://github.com/Dictionarry-Hub/profilarr/releases/tag/v2.1.0"
